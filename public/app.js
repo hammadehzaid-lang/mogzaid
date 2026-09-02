@@ -113,6 +113,7 @@
     try{
       const leaderboardUrl = apiBase ? apiBase + '/leaderboard' : (isLocalServer ? '/leaderboard' : 'leaderboard.json');
       const res = await fetch(leaderboardUrl);
+      if (!res.ok) throw new Error('Leaderboard request failed: ' + res.status);
       const data = await res.json();
       leaderboardEl.innerHTML = '';
       data.forEach(entry => {
@@ -126,7 +127,10 @@
         item.appendChild(img); item.appendChild(info);
         leaderboardEl.appendChild(item);
       });
-    }catch(e){ console.warn(e); }
+    }catch(e){
+      console.warn(e);
+      leaderboardEl.innerHTML = '<p>Leaderboard unavailable. Start the Node server or configure the public API.</p>';
+    }
   }
 
   loadLeaderboard();
