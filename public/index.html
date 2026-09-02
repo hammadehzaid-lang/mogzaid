@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Can U Mog Zaid</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Can U <span>Mog</span> Zaid</h1>
+    <p id="warning"></p>
+  </header>
+
+  <main class="glass-panel">
+    <section class="arena">
+      <div class="competitor">
+        <div class="cam-container">
+          <div id="viewport">
+            <div id="frame">
+              <video id="video" autoplay muted playsinline></video>
+              <canvas id="overlay"></canvas>
+            </div>
+          </div>
+          <div class="scanner-overlay"></div>
+        </div>
+        <div class="stats">
+          <h2>Your Camera</h2>
+          <div class="score" id="yourScore">Score: —</div>
+        </div>
+      </div>
+
+      <div class="vs-badge">VS</div>
+
+      <div class="competitor">
+        <div class="cam-container">
+          <img src="/zaid.jpg" alt="Zaid" />
+        </div>
+        <div class="stats">
+          <h2>Zaid</h2>
+          <div class="score zaid-score">Score: 999</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="controls">
+      <input id="nameInput" placeholder="Your name" />
+      <button id="saveNameBtn">Save</button>
+      <button id="scoreBtn" class="mog-button">Get Mog Rate</button>
+    </div>
+
+    <section class="leaderboard">
+      <h3>Leaderboard</h3>
+      <div class="leaderboard-list" id="leaderboard"></div>
+    </section>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
