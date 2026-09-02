@@ -1,4 +1,6 @@
 (function(){
+  // Set window.MOG_API_URL in config.js when the frontend is hosted separately.
+  const apiBase = (window.MOG_API_URL || '').replace(/\/$/, '');
   const video = document.getElementById('video');
   const canvas = document.getElementById('overlay');
   const ctx = canvas.getContext('2d');
@@ -88,23 +90,25 @@
         const chosenName = (nameInput && nameInput.value.trim()) || localStorage.getItem('mogName') || 'Guest';
         form.append('name', chosenName);
         form.append('score', score);
-        const response = await fetch('/upload', { method: 'POST', body: form });
+        if (!apiBase) throw new Error('No API URL configured');
+        const response = await fetch(apiBase + '/upload', { method: 'POST', body: form });
         if (!response.ok) throw new Error('Upload service unavailable');
         loadLeaderboard();
       } catch (error) {
-        document.getElementById('warning').textContent = 'Score: ' + score + '. Uploads require the local Node server.';
+        document.getElementById('warning').textContent = 'Score: ' + score + '. The public leaderboard API is not configured yet.';
       }
     }, 'image/jpeg', 0.9);
   });
 
   async function loadLeaderboard(){
     try{
-      const res = await fetch('leaderboard.json');
+      const res = await fetch(apiBase ? apiBase + '/leaderboard' : 'leaderboard.json');
       const data = await res.json();
       leaderboardEl.innerHTML = '';
       data.forEach(entry => {
         const item = document.createElement('div'); item.className = 'leaderboard-item';
-        const img = document.createElement('img'); img.src = entry.image;
+        const img = document.createElement('img');
+        img.src = entry.image && entry.image.startsWith('/') && apiBase ? apiBase + entry.image : entry.image;
         const info = document.createElement('div'); info.className = 'lb-info';
         const h4 = document.createElement('h4'); h4.textContent = entry.name || 'Guest';
         const p = document.createElement('p'); p.textContent = 'Score: ' + (entry.score || 0);
