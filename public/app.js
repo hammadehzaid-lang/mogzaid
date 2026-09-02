@@ -1,6 +1,7 @@
 (function(){
   // Set window.MOG_API_URL in config.js when the frontend is hosted separately.
   const apiBase = (window.MOG_API_URL || '').replace(/\/$/, '');
+  const isLocalServer = ['localhost', '127.0.0.1'].includes(window.location.hostname);
   const video = document.getElementById('video');
   const canvas = document.getElementById('overlay');
   const ctx = canvas.getContext('2d');
@@ -80,18 +81,26 @@
   }
 
   scoreBtn.addEventListener('click', async ()=>{
+    if (!video.videoWidth || !video.videoHeight) {
+      document.getElementById('warning').textContent = 'Camera is not ready yet.';
+      return;
+    }
     const score = Math.floor(Math.random()*80 + 10); // simple placeholder for 'mog rate'
+    const yourScoreEl = document.getElementById('yourScore');
+    if (yourScoreEl) yourScoreEl.textContent = 'Score: ' + score;
     const snap = document.createElement('canvas'); snap.width = video.videoWidth; snap.height = video.videoHeight;
     const sctx = snap.getContext('2d'); sctx.drawImage(video,0,0);
     snap.toBlob(async blob => {
       try {
+        if (!blob) throw new Error('Snapshot could not be created');
         const form = new FormData();
         form.append('image', blob, 'self.jpg');
         const chosenName = (nameInput && nameInput.value.trim()) || localStorage.getItem('mogName') || 'Guest';
         form.append('name', chosenName);
         form.append('score', score);
-        if (!apiBase) throw new Error('No API URL configured');
-        const response = await fetch(apiBase + '/upload', { method: 'POST', body: form });
+        const uploadUrl = apiBase ? apiBase + '/upload' : (isLocalServer ? '/upload' : null);
+        if (!uploadUrl) throw new Error('No API URL configured');
+        const response = await fetch(uploadUrl, { method: 'POST', body: form });
         if (!response.ok) throw new Error('Upload service unavailable');
         loadLeaderboard();
       } catch (error) {
@@ -102,7 +111,8 @@
 
   async function loadLeaderboard(){
     try{
-      const res = await fetch(apiBase ? apiBase + '/leaderboard' : 'leaderboard.json');
+      const leaderboardUrl = apiBase ? apiBase + '/leaderboard' : (isLocalServer ? '/leaderboard' : 'leaderboard.json');
+      const res = await fetch(leaderboardUrl);
       const data = await res.json();
       leaderboardEl.innerHTML = '';
       data.forEach(entry => {
