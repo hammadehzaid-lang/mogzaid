@@ -82,19 +82,24 @@
     const snap = document.createElement('canvas'); snap.width = video.videoWidth; snap.height = video.videoHeight;
     const sctx = snap.getContext('2d'); sctx.drawImage(video,0,0);
     snap.toBlob(async blob => {
-      const form = new FormData();
-      form.append('image', blob, 'self.jpg');
-      const chosenName = (nameInput && nameInput.value.trim()) || localStorage.getItem('mogName') || 'Guest';
-      form.append('name', chosenName);
-      form.append('score', score);
-      await fetch('/upload', { method: 'POST', body: form });
-      loadLeaderboard();
+      try {
+        const form = new FormData();
+        form.append('image', blob, 'self.jpg');
+        const chosenName = (nameInput && nameInput.value.trim()) || localStorage.getItem('mogName') || 'Guest';
+        form.append('name', chosenName);
+        form.append('score', score);
+        const response = await fetch('/upload', { method: 'POST', body: form });
+        if (!response.ok) throw new Error('Upload service unavailable');
+        loadLeaderboard();
+      } catch (error) {
+        document.getElementById('warning').textContent = 'Score: ' + score + '. Uploads require the local Node server.';
+      }
     }, 'image/jpeg', 0.9);
   });
 
   async function loadLeaderboard(){
     try{
-      const res = await fetch('/leaderboard');
+      const res = await fetch('leaderboard.json');
       const data = await res.json();
       leaderboardEl.innerHTML = '';
       data.forEach(entry => {
