@@ -11,7 +11,18 @@ const publicDir = path.join(__dirname, 'public');
 const uploadsDir = path.join(publicDir, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
-const upload = multer({ dest: uploadsDir });
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: uploadsDir,
+    filename: (req, file, callback) => {
+      const extension = file.mimetype === 'image/png' ? '.png' : '.jpg';
+      callback(null, `${Date.now()}-${Math.random().toString(36).slice(2)}${extension}`);
+    }
+  }),
+  fileFilter: (req, file, callback) => {
+    callback(null, ['image/jpeg', 'image/png'].includes(file.mimetype));
+  }
+});
 
 app.use(express.static(publicDir));
 app.use(express.json());
@@ -30,7 +41,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
   const score = Number(req.body.score) || 0;
   if (!name) return res.status(400).json({ error: 'name is required' });
   if (!req.file) return res.status(400).json({ error: 'no file uploaded' });
-  const filename = path.basename(req.file.path);
+  const filename = path.basename(req.file.filename);
   const imageUrl = '/uploads/' + filename;
   let board = [];
   try { board = JSON.parse(fs.readFileSync(leaderboardFile)); } catch (e) { board = []; }
