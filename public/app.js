@@ -42,9 +42,10 @@
     // match canvas to video intrinsic size (pixel coordinates)
     canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     canvas.style.width = video.clientWidth + 'px'; canvas.style.height = video.clientHeight + 'px';
-    // size the frame to intrinsic pixels so transforms map correctly
+    // Size the frame to the displayed viewport; face coordinates are converted below.
     const frame = document.getElementById('frame');
-    if (frame) { frame.style.width = canvas.width + 'px'; frame.style.height = canvas.height + 'px'; }
+    const viewport = document.getElementById('viewport');
+    if (frame && viewport) { frame.style.width = viewport.clientWidth + 'px'; frame.style.height = viewport.clientHeight + 'px'; }
     ctx.clearRect(0,0,canvas.width,canvas.height);
     if (detector) {
       detector.detect(video).then(faces => {
@@ -56,11 +57,16 @@
           ctx.beginPath(); ctx.arc(f.x + f.width/2, f.y + f.height/2, 4, 0, Math.PI*2); ctx.fill();
 
           // Compute zoom scale and translate to center the face in the viewport by transforming the whole frame
-          const vw = canvas.width; const vh = canvas.height;
+          const vw = viewport ? viewport.clientWidth : video.clientWidth;
+          const vh = viewport ? viewport.clientHeight : video.clientHeight;
+          const displayScaleX = vw / canvas.width;
+          const displayScaleY = vh / canvas.height;
+          const faceWidth = f.width * displayScaleX;
           // choose target fraction of viewport the face should fill (e.g., 0.6)
           const targetFraction = 0.6;
-          const scale = Math.min(3, Math.max(1, (targetFraction * vw) / f.width));
-          const cx = f.x + f.width/2; const cy = f.y + f.height/2;
+          const scale = Math.min(3, Math.max(1, (targetFraction * vw) / faceWidth));
+          const cx = (f.x + f.width/2) * displayScaleX;
+          const cy = (f.y + f.height/2) * displayScaleY;
           const tx = (vw/2) - (cx * scale);
           const ty = (vh/2) - (cy * scale);
           if (frame) {
