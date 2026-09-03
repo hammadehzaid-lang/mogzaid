@@ -256,6 +256,59 @@ video, img {
 	color: var(--text-muted);
 }
 
+.image-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5rem;
+}
+
+.image-modal.hidden {
+	display: none;
+}
+
+.image-modal-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(3, 4, 10, 0.8);
+}
+
+.image-modal-content {
+	position: relative;
+	max-width: min(90vw, 700px);
+	max-height: 90vh;
+	background: rgba(16, 18, 26, 0.96);
+	border: 1px solid rgba(255,255,255,0.12);
+	border-radius: 22px;
+	padding: 1rem;
+	box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.image-modal-content img {
+	display: block;
+	max-width: 100%;
+	max-height: 80vh;
+	border-radius: 16px;
+	object-fit: contain;
+}
+
+.image-modal-close {
+	position: absolute;
+	right: 0.75rem;
+	top: 0.75rem;
+	border: none;
+	background: rgba(255,255,255,0.1);
+	color: white;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
 	body {

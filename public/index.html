@@ -55,6 +55,14 @@
     </section>
   </main>
 
+  <div id="imageModal" class="image-modal hidden" aria-hidden="true">
+    <div class="image-modal-backdrop" data-close="true"></div>
+    <div class="image-modal-content" role="dialog" aria-modal="true" aria-label="Leaderboard image preview">
+      <button type="button" class="image-modal-close" aria-label="Close preview">×</button>
+      <img id="imageModalImg" src="" alt="Leaderboard entry preview" />
+    </div>
+  </div>
+
   <script src="config.js"></script>
   <script src="app.js" defer></script>
 </body>

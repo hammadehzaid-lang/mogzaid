@@ -139,6 +139,42 @@
     }, 'image/jpeg', 0.9);
   });
 
+  function openImagePreview(imageUrl){
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('imageModalImg');
+    if (!modal || !modalImg) return;
+    modalImg.src = imageUrl;
+    modal.classList.remove('hidden');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeImagePreview(){
+    const modal = document.getElementById('imageModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  document.addEventListener('click', (event) => {
+    const closeTarget = event.target && event.target.closest('[data-close="true"]');
+    const closeButton = event.target && event.target.closest('.image-modal-close');
+    if (closeTarget || closeButton) {
+      closeImagePreview();
+      return;
+    }
+
+    const modal = document.getElementById('imageModal');
+    if (modal && !modal.classList.contains('hidden') && event.target === modal) {
+      closeImagePreview();
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeImagePreview();
+    }
+  });
+
   async function loadLeaderboard(){
     try{
       const leaderboardUrl = apiBase ? apiBase + '/leaderboard' : (isLocalServer ? '/leaderboard' : 'leaderboard.json');
@@ -148,8 +184,12 @@
       leaderboardEl.innerHTML = '';
       data.forEach(entry => {
         const item = document.createElement('div'); item.className = 'leaderboard-item';
+        const imageUrl = entry.image && entry.image.startsWith('/') && apiBase ? apiBase + entry.image : (entry.image || '');
         const img = document.createElement('img');
-        img.src = entry.image && entry.image.startsWith('/') && apiBase ? apiBase + entry.image : entry.image;
+        img.src = imageUrl;
+        img.alt = (entry.name || 'Leaderboard') + ' photo';
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', () => imageUrl && openImagePreview(imageUrl));
         const info = document.createElement('div'); info.className = 'lb-info';
         const h4 = document.createElement('h4'); h4.textContent = entry.name || 'Guest';
         const p = document.createElement('p'); p.textContent = 'Score: ' + (entry.score || 0);
