@@ -1,2 +1,2 @@
-// Replace this value with the public URL of the deployed Node server.
-window.MOG_API_URL = '';
+// Temporary Cloudflare Quick Tunnel for the local Node server.
+window.MOG_API_URL = 'https://racial-likely-correspondence-spots.trycloudflare.com';
