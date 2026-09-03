@@ -26,8 +26,9 @@ app.use((req, res, next) => {
 const leaderboardFile = path.join(__dirname, 'leaderboard.json');
 
 app.post('/upload', upload.single('image'), (req, res) => {
-  const name = req.body.name || 'Guest';
+  const name = typeof req.body.name === 'string' ? req.body.name.trim() : '';
   const score = Number(req.body.score) || 0;
+  if (!name) return res.status(400).json({ error: 'name is required' });
   if (!req.file) return res.status(400).json({ error: 'no file uploaded' });
   const filename = path.basename(req.file.path);
   const imageUrl = '/uploads/' + filename;

@@ -9,6 +9,17 @@
   const leaderboardEl = document.getElementById('leaderboard');
   const nameInput = document.getElementById('nameInput');
   const saveNameBtn = document.getElementById('saveNameBtn');
+  const maxAttempts = 2;
+  let attempts = Number.parseInt(localStorage.getItem('mogAttempts') || '0', 10) || 0;
+
+  function updateAttemptButton(){
+    if (attempts >= maxAttempts) {
+      scoreBtn.disabled = true;
+      scoreBtn.textContent = 'No Attempts Left';
+    }
+  }
+
+  updateAttemptButton();
 
   let detector = null;
   if ('FaceDetector' in window) {
@@ -32,9 +43,13 @@
   }catch(e){}
 
   if (saveNameBtn) saveNameBtn.addEventListener('click', ()=>{
-    const n = (nameInput && nameInput.value.trim()) || 'Guest';
+    const n = nameInput && nameInput.value.trim();
+    if (!n) {
+      document.getElementById('warning').textContent = 'Enter your name before saving.';
+      return;
+    }
     try{ localStorage.setItem('mogName', n); }catch(e){}
-    alert('Name saved: ' + n);
+    document.getElementById('warning').textContent = 'Name saved: ' + n;
   });
 
   function detect(){
@@ -87,6 +102,13 @@
   }
 
   scoreBtn.addEventListener('click', async ()=>{
+    if (attempts >= maxAttempts) return;
+    const chosenName = (nameInput && nameInput.value.trim()) || localStorage.getItem('mogName') || '';
+    if (!chosenName) {
+      document.getElementById('warning').textContent = 'Enter your name before taking a picture.';
+      if (nameInput) nameInput.focus();
+      return;
+    }
     if (!video.videoWidth || !video.videoHeight) {
       document.getElementById('warning').textContent = 'Camera is not ready yet.';
       return;
@@ -101,13 +123,15 @@
         if (!blob) throw new Error('Snapshot could not be created');
         const form = new FormData();
         form.append('image', blob, 'self.jpg');
-        const chosenName = (nameInput && nameInput.value.trim()) || localStorage.getItem('mogName') || 'Guest';
         form.append('name', chosenName);
         form.append('score', score);
         const uploadUrl = apiBase ? apiBase + '/upload' : (isLocalServer ? '/upload' : null);
         if (!uploadUrl) throw new Error('No API URL configured');
         const response = await fetch(uploadUrl, { method: 'POST', body: form });
         if (!response.ok) throw new Error('Upload service unavailable');
+        attempts += 1;
+        try{ localStorage.setItem('mogAttempts', String(attempts)); }catch(e){}
+        updateAttemptButton();
         loadLeaderboard();
       } catch (error) {
         document.getElementById('warning').textContent = 'Score: ' + score + '. The public leaderboard API is not configured yet.';
