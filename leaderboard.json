@@ -13,18 +13,6 @@
   },
   {
     "name": "Guest",
-    "score": 73,
-    "image": "/uploads/11160a5037197577b876a063061c3a41",
-    "ts": 1788428494071
-  },
-  {
-    "name": "Guest",
-    "score": 81,
-    "image": "/uploads/1a496969bd2eaa2c103a1c954c4d3838",
-    "ts": 1788428499579
-  },
-  {
-    "name": "Guest",
     "score": 38,
     "image": "/uploads/6a91ad250bf6a91aeff8783c6d55205c.png",
     "ts": 1788428501081
@@ -38,7 +26,7 @@
   {
     "name": "Qattash",
     "score": 36,
-    "image": "/uploads/0d64ff9eed80a8e4eb9b760522f50faa",
+    "image": "/uploads/d0379ab49df19d438c3f7741c97d8ce1.png",
     "ts": 1788428654782
   },
   {
@@ -64,5 +52,71 @@
     "score": 54,
     "image": "/uploads/80959fa592700717d9d715dbb8e5e323.png",
     "ts": 1788429128134
+  },
+  {
+    "name": "Zaid 2",
+    "score": 83,
+    "image": "/uploads/1788462012890-9o6p4sv8k2q.png",
+    "ts": 1788462014933
+  },
+  {
+    "name": "نتن",
+    "score": 66,
+    "image": "/uploads/1788462230579-bbxp53vt5fc.png",
+    "ts": 1788462230635
+  },
+  {
+    "name": "hlewi",
+    "score": 20,
+    "image": "/uploads/1788462696734-ziiursup0wo.png",
+    "ts": 1788462696814
+  },
+  {
+    "name": "Morhaf",
+    "score": 40,
+    "image": "/uploads/1788463258698-9h4j6rio3no.png",
+    "ts": 1788463258749
+  },
+  {
+    "name": "Morhaf",
+    "score": 14,
+    "image": "/uploads/1788463261227-1n2zaxrvu55.png",
+    "ts": 1788463261404
+  },
+  {
+    "name": "Morhaf",
+    "score": 46,
+    "image": "/uploads/1788463262276-zfg7i2dvan.png",
+    "ts": 1788463262480
+  },
+  {
+    "name": "Morhaf",
+    "score": 84,
+    "image": "/uploads/1788463262778-v1769z1uxul.png",
+    "ts": 1788463262847
+  },
+  {
+    "name": "Morhaf",
+    "score": 42,
+    "image": "/uploads/1788463301734-m8tnj502l3.png",
+    "ts": 1788463301918
+  },
+  {
+    "name": "Morhaf",
+    "score": 44,
+    "image": "/uploads/1788463302861-or1l958gt0o.png",
+    "ts": 1788463302938
+  },
+  {
+    "name": "Morhaf",
+    "score": 14,
+    "image": "/uploads/1788463305342-ujez1gg1o.png",
+    "ts": 1788463305423
+  },
+  {
+    "name": "Morhaf",
+    "score": 45,
+    "image": "/uploads/1788463312889-jrb3bh0vdc9.png",
+    "ts": 1788463312944
   }
 ]
